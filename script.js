@@ -133,4 +133,39 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     requestAnimationFrame(tick);
   }
+
+  const projectModal = document.getElementById("projectModal");
+  const privateTriggers = document.querySelectorAll("[data-private-project]");
+
+  const openProjectModal = () => {
+    if (!projectModal) return;
+    projectModal.hidden = false;
+    document.body.style.overflow = "hidden";
+    if (lenis) lenis.stop();
+    const closeBtn = projectModal.querySelector(".project-modal-close");
+    if (closeBtn) closeBtn.focus();
+  };
+
+  const closeProjectModal = () => {
+    if (!projectModal) return;
+    projectModal.hidden = true;
+    document.body.style.overflow = "";
+    if (lenis) lenis.start();
+  };
+
+  privateTriggers.forEach((trigger) => {
+    trigger.addEventListener("click", openProjectModal);
+  });
+
+  if (projectModal) {
+    projectModal.querySelectorAll("[data-close-modal]").forEach((el) => {
+      el.addEventListener("click", closeProjectModal);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !projectModal.hidden) {
+        closeProjectModal();
+      }
+    });
+  }
 });

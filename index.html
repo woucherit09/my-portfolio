@@ -122,7 +122,7 @@
       <div class="stack-intro">
         <span class="band-index">02</span>
         <h2 class="band-title">Стек</h2>
-        <p class="lead compact">Технологии, с которыми работаю чаще всего. Листайте в сторону.</p>
+        <p class="lead compact">Технологии, с которыми работаю чаще всего.</p>
       </div>
       <div class="stack-track-wrap" id="stackTrackWrap">
         <div class="stack-track" id="stackTrack">
@@ -215,7 +215,7 @@
               <h3>
                 <a href="https://pyatii-etazh.vercel.app" class="project-link" target="_blank" rel="noopener noreferrer">Пятый этаж</a>
               </h3>
-              <p>Сайт кофейни: меню, атмосфера и форма бронирования столика.</p>
+              <p>Сайт кофейни: меню и бронь столика.</p>
               <ul class="project-tags">
                 <li>HTML</li>
                 <li>CSS</li>
@@ -229,7 +229,9 @@
           <article class="project-item">
             <span class="project-num">02</span>
             <div class="project-main">
-              <h3>Pulse Desk</h3>
+              <h3>
+                <button type="button" class="project-link project-private" data-private-project>Pulse Desk</button>
+              </h3>
               <p>Личный кабинет заявок: вход, роли и статусы задач.</p>
               <ul class="project-tags">
                 <li>React</li>
@@ -238,13 +240,15 @@
                 <li>PostgreSQL</li>
               </ul>
             </div>
-            <p class="project-role">Fullstack</p>
+            <button type="button" class="project-role project-role-link project-private" data-private-project>Смотреть</button>
           </article>
 
           <article class="project-item">
             <span class="project-num">03</span>
             <div class="project-main">
-              <h3>Relay Bot</h3>
+              <h3>
+                <button type="button" class="project-link project-private" data-private-project>Relay Bot</button>
+              </h3>
               <p>Telegram-бот для заказов с уведомлениями и связкой с CRM.</p>
               <ul class="project-tags">
                 <li>Python</li>
@@ -253,11 +257,21 @@
                 <li>MongoDB</li>
               </ul>
             </div>
-            <p class="project-role">Telegram-бот</p>
+            <button type="button" class="project-role project-role-link project-private" data-private-project>Смотреть</button>
           </article>
         </div>
       </div>
     </section>
+
+    <div class="project-modal" id="projectModal" hidden>
+      <div class="project-modal-backdrop" data-close-modal></div>
+      <div class="project-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="projectModalTitle">
+        <p class="project-modal-index">Проект</p>
+        <h2 id="projectModalTitle" class="project-modal-title">Доступ ограничен</h2>
+        <p class="project-modal-text">Клиент не дал согласие на распространение этого проекта.</p>
+        <button type="button" class="project-modal-close" data-close-modal>Понятно</button>
+      </div>
+    </div>
 
     <section class="contacts-section" id="contacts">
       <div class="contacts-head">

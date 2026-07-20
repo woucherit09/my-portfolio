@@ -636,6 +636,93 @@ h3,
   border-bottom-color: var(--ink);
 }
 
+button.project-link,
+button.project-role-link {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+button.project-role-link {
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--mute);
+  border-bottom: 1px solid transparent;
+  padding-top: 0.65rem;
+}
+
+.project-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+}
+
+.project-modal[hidden] {
+  display: none;
+}
+
+.project-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(18, 17, 15, 0.45);
+}
+
+.project-modal-dialog {
+  position: relative;
+  width: min(100%, 420px);
+  padding: 2rem 1.75rem;
+  background: var(--paper);
+  border: 1px solid var(--line);
+}
+
+.project-modal-index {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mute);
+  margin-bottom: 0.85rem;
+}
+
+.project-modal-title {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.85rem;
+  text-wrap: balance;
+}
+
+.project-modal-text {
+  color: var(--mute);
+  font-weight: 300;
+  margin-bottom: 1.75rem;
+  line-height: 1.55;
+}
+
+.project-modal-close {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--ink);
+  padding: 0 0 0.3rem;
+  cursor: pointer;
+}
+
 /* Contacts */
 
 .contacts-section {
