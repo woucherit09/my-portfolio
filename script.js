@@ -4,12 +4,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const isFinePointer = window.matchMedia("(pointer: fine)").matches;
+  const isTouchDevice = window.matchMedia("(hover: none), (pointer: coarse)").matches;
+  const isCompact = window.matchMedia("(max-width: 900px)").matches;
   const hasGsap = typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined";
 
   if (hasGsap) gsap.registerPlugin(ScrollTrigger);
 
+  // Lenis fights native touch scrolling and causes jank/freezes on phones.
   let lenis = null;
-  if (!prefersReducedMotion && typeof Lenis !== "undefined") {
+  if (!prefersReducedMotion && !isTouchDevice && !isCompact && typeof Lenis !== "undefined") {
     lenis = new Lenis({
       duration: 1.15,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),

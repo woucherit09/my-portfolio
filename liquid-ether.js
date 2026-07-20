@@ -28,6 +28,8 @@
         takeoverDuration: 0.25,
         autoResumeDelay: 1000,
         autoRampDuration: 0.6,
+        enableTouch: true,
+        mobileMode: false,
       },
       userOptions || {}
     );
@@ -79,9 +81,15 @@
       }
       init(el) {
         this.container = el;
-        this.pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
+        this.pixelRatio = opts.mobileMode
+          ? 1
+          : Math.min(window.devicePixelRatio || 1, 1.5);
         this.resize();
-        this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        this.renderer = new THREE.WebGLRenderer({
+          antialias: !opts.mobileMode,
+          alpha: true,
+          powerPreference: opts.mobileMode ? "low-power" : "high-performance",
+        });
         this.renderer.autoClear = false;
         this.renderer.setClearColor(new THREE.Color(0x000000), 0);
         this.renderer.setPixelRatio(this.pixelRatio);
@@ -136,9 +144,11 @@
         this.container = el;
         this.listenerTarget = window;
         this.listenerTarget.addEventListener("mousemove", this._onMouseMove);
-        this.listenerTarget.addEventListener("touchstart", this._onTouchStart, { passive: true });
-        this.listenerTarget.addEventListener("touchmove", this._onTouchMove, { passive: true });
-        this.listenerTarget.addEventListener("touchend", this._onTouchEnd);
+        if (opts.enableTouch) {
+          this.listenerTarget.addEventListener("touchstart", this._onTouchStart, { passive: true });
+          this.listenerTarget.addEventListener("touchmove", this._onTouchMove, { passive: true });
+          this.listenerTarget.addEventListener("touchend", this._onTouchEnd);
+        }
         document.addEventListener("mouseleave", this._onLeave);
       }
       dispose() {
@@ -941,6 +951,13 @@
       }
       loop() {
         if (!this.running) return;
+        if (opts.mobileMode) {
+          this._frame = (this._frame || 0) + 1;
+          if (this._frame % 2 === 1) {
+            rafId = requestAnimationFrame(this._loop);
+            return;
+          }
+        }
         this.render();
         rafId = requestAnimationFrame(this._loop);
       }
@@ -994,16 +1011,33 @@
 
     webgl.start();
 
-    const io = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        sectionVisible = entry.isIntersecting && entry.intersectionRatio > 0;
-        if (sectionVisible && !document.hidden) webgl.start();
-        else webgl.pause();
-      },
-      { threshold: [0, 0.01, 0.1] }
-    );
-    io.observe(container);
+    // Fixed fullscreen background stays on-screen; IntersectionObserver can
+    // falsely report non-intersection during mobile scroll and pause the loop.
+    let io = null;
+    if (!opts.mobileMode) {
+      io = new IntersectionObserver(
+        (entries) => {
+          const entry = entries[0];
+          sectionVisible = entry.isIntersecting && entry.intersectionRatio > 0;
+          if (sectionVisible && !document.hidden) webgl.start();
+          else webgl.pause();
+        },
+        { threshold: [0, 0.01, 0.1] }
+      );
+      io.observe(container);
+    }
+
+    // Resume after scroll settles — iOS throttles rAF mid-scroll.
+    let scrollResumeTimer = null;
+    const onScrollResume = () => {
+      if (document.hidden) return;
+      if (scrollResumeTimer) clearTimeout(scrollResumeTimer);
+      scrollResumeTimer = setTimeout(() => {
+        if (!document.hidden) webgl.start();
+      }, 80);
+    };
+    window.addEventListener("scroll", onScrollResume, { passive: true });
+    window.addEventListener("touchend", onScrollResume, { passive: true });
 
     const ro = new ResizeObserver(() => {
       if (resizeRafId) cancelAnimationFrame(resizeRafId);
@@ -1014,13 +1048,16 @@
     return {
       dispose() {
         if (rafId) cancelAnimationFrame(rafId);
+        if (scrollResumeTimer) clearTimeout(scrollResumeTimer);
+        window.removeEventListener("scroll", onScrollResume);
+        window.removeEventListener("touchend", onScrollResume);
         try {
           ro.disconnect();
         } catch (e) {
           void 0;
         }
         try {
-          io.disconnect();
+          if (io) io.disconnect();
         } catch (e) {
           void 0;
         }
@@ -1036,15 +1073,26 @@
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReducedMotion) return;
 
+    const isMobile =
+      window.matchMedia("(max-width: 900px)").matches ||
+      window.matchMedia("(hover: none), (pointer: coarse)").matches;
+
     initLiquidEther(container, {
       colors: ["#5227FF", "#FF9FFC", "#B497CF"],
-      mouseForce: 18,
-      cursorSize: 100,
+      mouseForce: isMobile ? 12 : 18,
+      cursorSize: isMobile ? 80 : 100,
       autoDemo: true,
-      autoSpeed: 0.5,
-      autoIntensity: 2.2,
-      resolution: 0.4,
-      iterationsPoisson: 24,
+      autoSpeed: isMobile ? 0.35 : 0.5,
+      autoIntensity: isMobile ? 1.4 : 2.2,
+      resolution: isMobile ? 0.22 : 0.4,
+      iterationsPoisson: isMobile ? 12 : 24,
+      iterationsViscous: isMobile ? 12 : 32,
+      BFECC: !isMobile,
+      // Touch-driven forces fight native scrolling and freeze the page.
+      enableTouch: !isMobile,
+      // Lower GPU load on phones; skip alternate frames.
+      mobileMode: isMobile,
+      autoResumeDelay: isMobile ? 400 : 1000,
     });
   }
 

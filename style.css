@@ -25,6 +25,8 @@
 html {
   scroll-behavior: auto;
   background: var(--base);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 html.lenis,
@@ -47,6 +49,19 @@ body {
   inset: 0;
   z-index: -1;
   pointer-events: none;
+  /* CSS ambient layer keeps motion visible while iOS throttles WebGL rAF mid-scroll */
+  background:
+    radial-gradient(ellipse 70% 50% at 20% 30%, rgba(82, 39, 255, 0.28), transparent 60%),
+    radial-gradient(ellipse 55% 45% at 80% 70%, rgba(255, 159, 252, 0.18), transparent 55%),
+    radial-gradient(ellipse 40% 35% at 50% 50%, rgba(180, 151, 207, 0.12), transparent 50%),
+    var(--base);
+  background-size: 120% 120%, 130% 130%, 100% 100%, auto;
+  animation: liquidDrift 18s ease-in-out infinite alternate;
+}
+
+@keyframes liquidDrift {
+  0% { background-position: 0% 40%, 100% 60%, 50% 50%, 0 0; }
+  100% { background-position: 30% 60%, 70% 30%, 45% 55%, 0 0; }
 }
 
 .liquid-bg canvas {
@@ -340,6 +355,7 @@ h3,
 .hero-line {
   display: block;
   overflow: hidden;
+  white-space: nowrap;
 }
 
 .hero-line .char {
@@ -1146,15 +1162,58 @@ button.project-role-link {
 
   .hero {
     min-height: auto;
-    padding-top: 3rem;
+    padding-top: 2.5rem;
+    gap: 1.75rem;
+  }
+
+  .hero-title {
+    font-size: clamp(2.45rem, 11.2vw, 3.35rem);
+    letter-spacing: -0.045em;
+  }
+
+  .hero-line-offset {
+    padding-left: 0.35rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.02rem;
+  }
+
+  .hero-bottom {
+    gap: 1.5rem;
   }
 
   .scroll-cue {
     display: none;
   }
+
+  .stack-shell {
+    padding: 3.5rem 1.15rem;
+  }
+
+  .magic-bento-card {
+    min-height: 0;
+    padding: 1.5rem 1.25rem;
+  }
+
+  .magic-bento-card__title {
+    font-size: 1.45rem;
+    margin-bottom: 1.1rem;
+  }
+
+  .magic-bento-card:hover {
+    transform: none;
+  }
+
+  .global-spotlight {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .liquid-bg {
+    animation: none;
+  }
   .cursor-dot,
   .cursor-ring,
   .text-link,
