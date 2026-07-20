@@ -617,6 +617,25 @@ h3,
   white-space: nowrap;
 }
 
+.project-link {
+  color: inherit;
+  transition: color 0.25s var(--ease);
+}
+
+.project-link:hover {
+  color: color-mix(in srgb, var(--ink) 70%, var(--mark));
+}
+
+.project-role-link {
+  border-bottom: 1px solid transparent;
+  transition: color 0.25s var(--ease), border-color 0.25s var(--ease);
+}
+
+.project-role-link:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+
 /* Contacts */
 
 .contacts-section {
