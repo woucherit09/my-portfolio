@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const isFinePointer = window.matchMedia("(pointer: fine)").matches;
-  const isDesktop = window.matchMedia("(min-width: 901px)").matches;
   const hasGsap = typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined";
 
   if (hasGsap) gsap.registerPlugin(ScrollTrigger);
@@ -166,25 +165,6 @@ document.addEventListener("DOMContentLoaded", () => {
         },
       });
     });
-
-    const track = document.getElementById("stackTrack");
-    const pin = document.getElementById("stackPin");
-    if (track && pin && isDesktop) {
-      const getScroll = () => Math.max(0, track.scrollWidth - window.innerWidth + 48);
-      gsap.to(track, {
-        x: () => -getScroll(),
-        ease: "none",
-        scrollTrigger: {
-          trigger: pin,
-          start: "top top",
-          end: () => `+=${getScroll()}`,
-          scrub: 0.85,
-          pin: true,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-        },
-      });
-    }
 
     ScrollTrigger.refresh();
   }
