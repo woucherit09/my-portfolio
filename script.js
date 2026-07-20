@@ -82,29 +82,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   setActiveLink();
 
-  const parallaxLines = document.querySelectorAll("[data-parallax]");
-  if (!prefersReducedMotion && parallaxLines.length) {
-    const updateParallax = () => {
-      const y = window.scrollY;
-      parallaxLines.forEach((line) => {
-        const speed = Number(line.getAttribute("data-parallax")) || 0;
-        line.style.transform = `translate3d(0, ${y * speed}px, 0)`;
-      });
-    };
-
-    if (lenis) {
-      lenis.on("scroll", ({ scroll }) => {
-        parallaxLines.forEach((line) => {
-          const speed = Number(line.getAttribute("data-parallax")) || 0;
-          line.style.transform = `translate3d(0, ${scroll * speed}px, 0)`;
-        });
-      });
-    } else {
-      window.addEventListener("scroll", updateParallax, { passive: true });
-      updateParallax();
-    }
-  }
-
   const stackWrap = document.getElementById("stackTrackWrap");
   if (stackWrap && !prefersReducedMotion) {
     stackWrap.addEventListener(
