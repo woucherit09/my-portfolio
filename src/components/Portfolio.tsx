@@ -247,8 +247,8 @@ export function Portfolio() {
             animate={reduceMotion ? undefined : { opacity: 1 }}
             transition={{ delay: 1.15 }}
           >
-            <span>01</span>
-            <code>{"{ idea → interface → production }"}</code>
+            <span className="terminal-dots"><i></i><i></i><i></i></span>
+            <code><b>portfolio@km</b>:~$ idea → interface → production</code>
           </motion.div>
           <div className="hero-coordinate" aria-hidden="true">55.7558° N / 37.6173° E</div>
           <a className="scroll-indicator" href="#certificates" aria-label="К сертификатам">
@@ -308,7 +308,7 @@ export function Portfolio() {
                 <article className="project-card">
                   <div className="project-index">0{index + 1}</div>
                   <div className="project-copy">
-                    <span className="project-type">Selected case / {project.tags[0]}</span>
+                    <span className="project-type"><b>case_{String(index + 1).padStart(2, "0")}</b> / {project.tags[0]}</span>
                     <h3>{project.title}</h3>
                     <p>{project.description}</p>
                     <ul>
