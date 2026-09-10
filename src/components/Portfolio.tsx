@@ -239,16 +239,6 @@ export function Portfolio() {
                 </div>
               </Reveal>
             </div>
-            <motion.aside
-              className="hero-stamp"
-              aria-label="Открыт к новым проектам"
-              initial={reduceMotion ? false : { opacity: 0, rotate: -18, scale: 0.8 }}
-              animate={reduceMotion ? undefined : { opacity: 1, rotate: -8, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <span>Открыт к проектам</span>
-              <strong>2026</strong>
-            </motion.aside>
           </div>
           <motion.div
             className="hero-code-note"

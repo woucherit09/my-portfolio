@@ -43,10 +43,10 @@ const fragmentShader = `
     float t = uTime * mix(0.34, 0.18, uMobile);
     float phase = uPhase;
 
-    vec3 paper = vec3(0.953, 0.941, 0.902);
-    vec3 cobalt = vec3(0.075, 0.235, 0.86);
-    vec3 coral = vec3(0.98, 0.31, 0.19);
-    vec3 acid = vec3(0.72, 0.88, 0.22);
+    vec3 paper = vec3(0.957, 0.937, 0.902);
+    vec3 plum = vec3(0.36, 0.18, 0.31);
+    vec3 terracotta = vec3(0.76, 0.31, 0.20);
+    vec3 gold = vec3(0.82, 0.63, 0.25);
 
     float pointerDistance = length(p - pointer);
     float pointerPull = exp(-pointerDistance * 3.8) * (1.0 - uMobile);
@@ -67,19 +67,13 @@ const fragmentShader = `
     ribbonMask *= smoothstep(0.48, 0.08, abs(p.y));
     flowLines *= ribbonMask;
 
-    float ringDistance = length(p - pointer);
-    float ringWave = abs(sin(ringDistance * 38.0 - t * 1.8));
-    float rings = (1.0 - smoothstep(0.0, 0.12, ringWave));
-    rings *= smoothstep(0.52, 0.05, ringDistance) * (1.0 - uMobile);
-
     float scanPosition = fract(t * 0.055 + phase * 0.13);
     float scanBand = smoothstep(0.17, 0.0, abs(uv.y - scanPosition));
     float sectionMix = 0.5 + 0.5 * sin(phase * 1.35);
-    vec3 phaseColor = mix(cobalt, coral, sectionMix);
+    vec3 phaseColor = mix(plum, terracotta, sectionMix);
     vec3 color = paper;
     color = mix(color, phaseColor, flowLines * (0.28 + scanBand * 0.34));
-    color = mix(color, coral, rings * 0.2);
-    color = mix(color, acid, scanBand * flowLines * 0.12);
+    color = mix(color, gold, scanBand * flowLines * 0.1);
 
     float hairline = 1.0 - smoothstep(0.0, 0.0015, abs(fract(uv.y * 16.0) - 0.5));
     color = mix(color, vec3(0.1), hairline * 0.018);
