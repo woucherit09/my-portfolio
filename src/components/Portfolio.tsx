@@ -35,6 +35,24 @@ const iconMap: Record<string, { title: string; path: string }> = {
   vercel: siVercel,
 };
 
+const galleryFrames = [
+  {
+    src: "/gallery/interface-architecture.png",
+    alt: "Абстрактная архитектура цифрового интерфейса",
+    label: "Interface",
+  },
+  {
+    src: "/gallery/system-flow.png",
+    alt: "Абстрактная визуализация потоков программной системы",
+    label: "System",
+  },
+  {
+    src: "/gallery/digital-craft.png",
+    alt: "Абстрактные формы цифрового продукта",
+    label: "Craft",
+  },
+];
+
 function Reveal({
   children,
   className = "",
@@ -281,6 +299,28 @@ export function Portfolio() {
                   ))}
                 </div>
               </Reveal>
+            ))}
+          </div>
+        </section>
+
+        <section className="visual-interlude" aria-label="Визуальный процесс создания цифрового продукта">
+          <Reveal className="gallery-heading">
+            <span>Process study / 001</span>
+            <p>От структуры — к системе — к выразительному продукту.</p>
+          </Reveal>
+          <div className="kinetic-gallery">
+            {galleryFrames.map((frame, index) => (
+              <motion.figure
+                className="gallery-panel"
+                key={frame.src}
+                initial={reduceMotion ? false : { opacity: 0, y: 36, rotate: index - 1 }}
+                whileInView={reduceMotion ? undefined : { opacity: 1, y: 0, rotate: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.8, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <Image src={frame.src} alt={frame.alt} fill sizes="(max-width: 720px) 80vw, 40vw" />
+                <figcaption><span>0{index + 1}</span>{frame.label}</figcaption>
+              </motion.figure>
             ))}
           </div>
         </section>

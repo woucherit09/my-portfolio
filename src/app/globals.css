@@ -791,6 +791,157 @@ footer {
   font-weight: 800;
 }
 
+.visual-interlude {
+  position: relative;
+  z-index: 2;
+  width: calc(100% - 132px);
+  margin-left: 132px;
+  padding: clamp(5rem, 9vw, 8rem) clamp(1.25rem, 4vw, 5rem);
+  overflow: hidden;
+  background: var(--ink);
+  color: var(--paper-bright);
+  clip-path: polygon(0 5%, 100% 0, 100% 95%, 0 100%);
+}
+
+.visual-interlude::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .18;
+  background:
+    linear-gradient(90deg, transparent 49.9%, rgba(255,255,255,.2) 50%, transparent 50.1%),
+    linear-gradient(0deg, transparent 49.9%, rgba(255,255,255,.12) 50%, transparent 50.1%);
+  background-size: 80px 80px;
+}
+
+.gallery-heading {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 1360px);
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  margin: 0 auto 2rem;
+  padding-bottom: .8rem;
+  border-bottom: 1px solid rgba(255,255,255,.45);
+  font-family: var(--font-space), sans-serif;
+}
+
+.gallery-heading span {
+  color: var(--acid);
+  font-size: .78rem;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.gallery-heading p {
+  margin: 0;
+  font-size: .9rem;
+  font-weight: 600;
+}
+
+.kinetic-gallery {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 1360px);
+  min-height: clamp(300px, 38vw, 560px);
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  align-items: center;
+  margin-inline: auto;
+  perspective: 1200px;
+}
+
+.gallery-panel {
+  position: relative;
+  height: clamp(240px, 30vw, 440px);
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.65);
+  background: var(--paper);
+  box-shadow: 0 24px 70px rgba(0,0,0,.32);
+  transition: clip-path .65s cubic-bezier(.22,1,.36,1), z-index 0s, filter .35s ease;
+}
+
+.gallery-panel:nth-child(1) {
+  grid-column: 1 / 6;
+  grid-row: 1;
+  z-index: 1;
+  clip-path: polygon(0 8%, 100% 0, 92% 92%, 3% 100%);
+  translate: 0 2%;
+  rotate: -1.5deg;
+}
+
+.gallery-panel:nth-child(2) {
+  grid-column: 4 / 10;
+  grid-row: 1;
+  z-index: 3;
+  clip-path: polygon(4% 0, 97% 7%, 100% 96%, 0 89%);
+  translate: 0 -2%;
+}
+
+.gallery-panel:nth-child(3) {
+  grid-column: 8 / 13;
+  grid-row: 1;
+  z-index: 2;
+  clip-path: polygon(8% 5%, 100% 0, 97% 100%, 0 92%);
+  translate: 0 3%;
+  rotate: 1.5deg;
+}
+
+.gallery-panel img {
+  object-fit: cover;
+  filter: saturate(.82) contrast(1.04);
+  animation: gallery-breathe 10s ease-in-out infinite alternate;
+  transition: transform .8s cubic-bezier(.22,1,.36,1), filter .5s ease;
+}
+
+.gallery-panel:nth-child(2) img {
+  animation-delay: -3s;
+}
+
+.gallery-panel:nth-child(3) img {
+  animation-delay: -6s;
+}
+
+.gallery-panel:hover {
+  z-index: 5;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.gallery-panel:hover img {
+  transform: scale(1.055);
+  filter: saturate(1) contrast(1);
+}
+
+.gallery-panel figcaption {
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  padding: .45rem .65rem;
+  background: rgba(33,29,30,.9);
+  color: white;
+  font-family: var(--font-space), sans-serif;
+  font-size: .78rem;
+  font-weight: 750;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.gallery-panel figcaption span {
+  color: var(--acid);
+}
+
+@keyframes gallery-breathe {
+  from { transform: scale(1.01) translate3d(-1%, 0, 0); }
+  to { transform: scale(1.09) translate3d(1.5%, -1%, 0); }
+}
+
 .project-list {
   display: grid;
   gap: 0;
@@ -1060,6 +1211,11 @@ footer {
     margin-inline: auto;
   }
 
+  .visual-interlude {
+    width: 100%;
+    margin-left: 0;
+  }
+
   .menu-button {
     display: grid;
   }
@@ -1178,6 +1334,49 @@ footer {
 
   .section-heading h2 {
     font-size: clamp(3rem, 16vw, 4.8rem);
+  }
+
+  .visual-interlude {
+    padding: 5rem 1rem;
+    clip-path: polygon(0 2%, 100% 0, 100% 98%, 0 100%);
+  }
+
+  .gallery-heading {
+    display: grid;
+    gap: .45rem;
+  }
+
+  .gallery-heading p {
+    font-size: .82rem;
+  }
+
+  .kinetic-gallery {
+    width: calc(100% + 2rem);
+    min-height: 320px;
+    display: flex;
+    gap: .75rem;
+    margin-inline: -1rem;
+    padding: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .kinetic-gallery::-webkit-scrollbar {
+    display: none;
+  }
+
+  .gallery-panel:nth-child(n) {
+    flex: 0 0 82vw;
+    height: 290px;
+    translate: 0;
+    rotate: 0deg;
+    clip-path: polygon(0 3%, 100% 0, 97% 97%, 2% 100%);
+    scroll-snap-align: center;
+  }
+
+  .gallery-panel img {
+    animation: none;
   }
 
   .certificate-grid {
