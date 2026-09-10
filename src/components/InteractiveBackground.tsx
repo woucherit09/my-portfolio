@@ -72,8 +72,8 @@ const fragmentShader = `
     float sectionMix = 0.5 + 0.5 * sin(phase * 1.35);
     vec3 phaseColor = mix(plum, terracotta, sectionMix);
     vec3 color = paper;
-    color = mix(color, phaseColor, flowLines * (0.28 + scanBand * 0.34));
-    color = mix(color, gold, scanBand * flowLines * 0.1);
+    color = mix(color, phaseColor, flowLines * (0.14 + scanBand * 0.16));
+    color = mix(color, gold, scanBand * flowLines * 0.05);
 
     float hairline = 1.0 - smoothstep(0.0, 0.0015, abs(fract(uv.y * 16.0) - 0.5));
     color = mix(color, vec3(0.1), hairline * 0.018);

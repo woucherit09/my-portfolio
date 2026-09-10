@@ -240,17 +240,6 @@ export function Portfolio() {
               </Reveal>
             </div>
           </div>
-          <motion.div
-            className="hero-code-note"
-            aria-hidden="true"
-            initial={reduceMotion ? false : { opacity: 0 }}
-            animate={reduceMotion ? undefined : { opacity: 1 }}
-            transition={{ delay: 1.15 }}
-          >
-            <span className="terminal-dots"><i></i><i></i><i></i></span>
-            <code><b>portfolio@km</b>:~$ idea → interface → production</code>
-          </motion.div>
-          <div className="hero-coordinate" aria-hidden="true">55.7558° N / 37.6173° E</div>
           <a className="scroll-indicator" href="#certificates" aria-label="К сертификатам">
             <span>Листать</span><ArrowDown size={18} />
           </a>
