@@ -17,46 +17,72 @@ const fragmentShader = `
   uniform float uTime;
   uniform float uPhase;
   uniform vec2 uPointer;
+  uniform vec2 uResolution;
   uniform float uMobile;
 
-  float blob(vec2 uv, vec2 center, float size) {
-    return smoothstep(size, 0.0, distance(uv, center));
+  float hash(vec2 p) {
+    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+  }
+
+  float noise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    f = f * f * (3.0 - 2.0 * f);
+    return mix(
+      mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x),
+      mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x),
+      f.y
+    );
   }
 
   void main() {
     vec2 uv = vUv;
-    float t = uTime * mix(0.09, 0.055, uMobile);
-    float p = uPhase;
-
-    vec2 a = vec2(
-      0.18 + 0.16 * sin(t + p * 1.4),
-      0.25 + 0.13 * cos(t * 1.3 + p)
-    );
-    vec2 b = vec2(
-      0.78 + 0.12 * cos(t * 0.8 + p * 1.8),
-      0.67 + 0.18 * sin(t + p * 0.7)
-    );
-    vec2 c = mix(vec2(0.5, 0.5), uPointer, 0.24 * (1.0 - uMobile));
-
-    float fieldA = blob(uv, a, 0.62);
-    float fieldB = blob(uv, b, 0.56);
-    float pointerField = blob(uv, c, 0.34) * (1.0 - uMobile);
+    float aspect = uResolution.x / max(uResolution.y, 1.0);
+    vec2 p = (uv - 0.5) * vec2(aspect, 1.0);
+    vec2 pointer = (uPointer - 0.5) * vec2(aspect, 1.0);
+    float t = uTime * mix(0.34, 0.18, uMobile);
+    float phase = uPhase;
 
     vec3 paper = vec3(0.953, 0.941, 0.902);
     vec3 cobalt = vec3(0.075, 0.235, 0.86);
     vec3 coral = vec3(0.98, 0.31, 0.19);
     vec3 acid = vec3(0.72, 0.88, 0.22);
 
-    float sectionMix = 0.5 + 0.5 * sin(p * 1.35);
-    vec3 phaseColor = mix(cobalt, mix(coral, acid, sectionMix), smoothstep(0.12, 0.94, uv.y));
-    vec3 color = paper;
-    color = mix(color, cobalt, fieldA * 0.105);
-    color = mix(color, phaseColor, fieldB * 0.08);
-    color = mix(color, coral, pointerField * 0.08);
+    float pointerDistance = length(p - pointer);
+    float pointerPull = exp(-pointerDistance * 3.8) * (1.0 - uMobile);
+    float grain = noise(p * 5.0 + vec2(t * 0.08, phase * 0.21));
+    float flowLines = 0.0;
 
-    vec2 grid = abs(fract(uv * vec2(18.0, 12.0)) - 0.5);
-    float gridLine = 1.0 - smoothstep(0.485, 0.5, max(grid.x, grid.y));
-    color = mix(color, vec3(0.12, 0.14, 0.2), gridLine * 0.018);
+    for (int i = 0; i < 9; i++) {
+      float fi = float(i) - 4.0;
+      float wave = sin(p.x * 2.25 + fi * 0.52 + t + phase * 0.32) * 0.075;
+      wave += sin(p.x * 5.1 - t * 0.55 + fi) * 0.016;
+      wave += (grain - 0.5) * 0.024;
+      wave += (pointer.y - p.y) * pointerPull * 0.14;
+      float distanceToLine = abs(p.y - wave - fi * 0.042);
+      flowLines += 1.0 - smoothstep(0.002, 0.0065, distanceToLine);
+    }
+
+    float ribbonMask = smoothstep(1.25, 0.2, abs(p.x - 0.2));
+    ribbonMask *= smoothstep(0.48, 0.08, abs(p.y));
+    flowLines *= ribbonMask;
+
+    float ringDistance = length(p - pointer);
+    float ringWave = abs(sin(ringDistance * 38.0 - t * 1.8));
+    float rings = (1.0 - smoothstep(0.0, 0.12, ringWave));
+    rings *= smoothstep(0.52, 0.05, ringDistance) * (1.0 - uMobile);
+
+    float scanPosition = fract(t * 0.055 + phase * 0.13);
+    float scanBand = smoothstep(0.17, 0.0, abs(uv.y - scanPosition));
+    float sectionMix = 0.5 + 0.5 * sin(phase * 1.35);
+    vec3 phaseColor = mix(cobalt, coral, sectionMix);
+    vec3 color = paper;
+    color = mix(color, phaseColor, flowLines * (0.28 + scanBand * 0.34));
+    color = mix(color, coral, rings * 0.2);
+    color = mix(color, acid, scanBand * flowLines * 0.12);
+
+    float hairline = 1.0 - smoothstep(0.0, 0.0015, abs(fract(uv.y * 16.0) - 0.5));
+    color = mix(color, vec3(0.1), hairline * 0.018);
 
     gl_FragColor = vec4(color, 1.0);
   }
@@ -86,6 +112,7 @@ export function InteractiveBackground() {
       uTime: { value: 0 },
       uPhase: { value: 0 },
       uPointer: { value: new THREE.Vector2(0.5, 0.5) },
+      uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
       uMobile: { value: mobile ? 1 : 0 },
     };
     const geometry = new THREE.PlaneGeometry(2, 2);
@@ -122,6 +149,7 @@ export function InteractiveBackground() {
     const onResize = () => {
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, mobile ? 1 : 1.5));
       renderer.setSize(window.innerWidth, window.innerHeight);
+      uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
     };
 
     const clock = new THREE.Clock();

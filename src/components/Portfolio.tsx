@@ -93,13 +93,14 @@ function Navigation() {
     <header className="site-header">
       <a className="monogram" href="#hero" aria-label="На главную">КМ</a>
       <nav className={open ? "nav-links is-open" : "nav-links"} aria-label="Основная навигация">
-        {navigation.map((item) => (
+        {navigation.map((item, index) => (
           <a
             key={item.href}
             className={active === item.href.slice(1) ? "is-active" : ""}
             href={item.href}
             onClick={() => setOpen(false)}
           >
+            <span aria-hidden="true">0{index + 1}</span>
             {item.label}
           </a>
         ))}
@@ -114,6 +115,7 @@ function Navigation() {
           {open ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
+      <div className="rail-status" aria-hidden="true"><span></span> Available</div>
     </header>
   );
 }
@@ -201,15 +203,23 @@ export function Portfolio() {
         <section id="hero" className="hero section-phase">
           <div className="hero-layout">
             <div className="hero-content">
-              <p className="eyebrow"><span aria-hidden="true">✦</span> {profile.role}</p>
+              <motion.p
+                className="hero-intro"
+                initial={reduceMotion ? false : { opacity: 0, x: -18 }}
+                animate={reduceMotion ? undefined : { opacity: 1, x: 0 }}
+                transition={{ duration: 0.65, delay: 0.08 }}
+              >
+                Привет, я —
+              </motion.p>
               <h1>
                 {words.map((word, index) => (
                   <span className="hero-word-wrap" key={word}>
                     <motion.span
                       className="hero-word"
-                      initial={reduceMotion ? false : { y: "115%" }}
-                      animate={reduceMotion ? undefined : { y: 0 }}
-                      transition={{ duration: 0.85, delay: 0.14 + index * 0.12, ease: [0.22, 1, 0.36, 1] }}
+                      data-text={word}
+                      initial={reduceMotion ? false : { x: "-108%", skewX: -8 }}
+                      animate={reduceMotion ? undefined : { x: 0, skewX: 0 }}
+                      transition={{ duration: 0.92, delay: 0.18 + index * 0.16, ease: [0.22, 1, 0.36, 1] }}
                     >
                       {word}
                     </motion.span>
@@ -217,6 +227,11 @@ export function Portfolio() {
                 ))}
               </h1>
               <Reveal delay={0.3}>
+                <div className="hero-role-line">
+                  <span>{profile.role}</span>
+                  <i aria-hidden="true"></i>
+                  <small>Frontend / Backend / AI</small>
+                </div>
                 <p className="hero-description">{profile.description}</p>
                 <div className="hero-actions">
                   <a className="primary-button" href="#contacts">Связаться <ArrowUpRight size={18} /></a>
@@ -235,6 +250,16 @@ export function Portfolio() {
               <strong>2026</strong>
             </motion.aside>
           </div>
+          <motion.div
+            className="hero-code-note"
+            aria-hidden="true"
+            initial={reduceMotion ? false : { opacity: 0 }}
+            animate={reduceMotion ? undefined : { opacity: 1 }}
+            transition={{ delay: 1.15 }}
+          >
+            <span>01</span>
+            <code>{"{ idea → interface → production }"}</code>
+          </motion.div>
           <div className="hero-coordinate" aria-hidden="true">55.7558° N / 37.6173° E</div>
           <a className="scroll-indicator" href="#certificates" aria-label="К сертификатам">
             <span>Листать</span><ArrowDown size={18} />
