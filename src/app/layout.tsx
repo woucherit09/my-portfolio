@@ -32,12 +32,12 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#0a0a0f",
+  themeColor: "#f3f0e8",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="ru" data-theme="dark">
+    <html lang="ru" data-theme="light">
       <body className={`${inter.variable} ${manrope.variable}`}>{children}</body>
     </html>
   );

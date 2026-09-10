@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowDown, ArrowUpRight, Code2, ExternalLink, Menu, Moon, Sun, X } from "lucide-react";
+import { ArrowDown, ArrowUpRight, Code2, ExternalLink, Menu, X } from "lucide-react";
 import {
   siAnthropic,
   siDocker,
@@ -73,7 +73,6 @@ function TechIcon({ slug }: { slug: string }) {
 function Navigation() {
   const [active, setActive] = useState("hero");
   const [open, setOpen] = useState(false);
-  const [light, setLight] = useState(false);
 
   useEffect(() => {
     const observers = navigation.map(({ href }) => {
@@ -89,13 +88,6 @@ function Navigation() {
     });
     return () => observers.forEach((observer) => observer?.disconnect());
   }, []);
-
-  const toggleTheme = () => {
-    setLight((current) => {
-      document.documentElement.dataset.theme = current ? "dark" : "light";
-      return !current;
-    });
-  };
 
   return (
     <header className="site-header">
@@ -113,9 +105,6 @@ function Navigation() {
         ))}
       </nav>
       <div className="header-actions">
-        <button className="icon-button" onClick={toggleTheme} aria-label="Переключить тему">
-          {light ? <Moon size={18} /> : <Sun size={18} />}
-        </button>
         <button
           className="icon-button menu-button"
           onClick={() => setOpen((value) => !value)}
@@ -147,6 +136,7 @@ function Certificates() {
         {certificates.map((certificate, index) => (
           <Reveal key={`${certificate.title}-${index}`} delay={index * 0.09}>
             <button className="certificate-card" onClick={() => setSelected(index)}>
+              <span className="certificate-index" aria-hidden="true">0{index + 1}</span>
               <span className="certificate-image">
                 <Image
                   src={certificate.image}
@@ -209,40 +199,60 @@ export function Portfolio() {
       <Navigation />
       <main>
         <section id="hero" className="hero section-phase">
-          <div className="hero-content">
-            <p className="eyebrow">{profile.role}</p>
-            <h1>
-              {words.map((word, index) => (
-                <span className="hero-word-wrap" key={word}>
-                  <motion.span
-                    className="hero-word"
-                    initial={reduceMotion ? false : { y: "115%" }}
-                    animate={reduceMotion ? undefined : { y: 0 }}
-                    transition={{ duration: 0.85, delay: 0.14 + index * 0.12, ease: [0.22, 1, 0.36, 1] }}
-                  >
-                    {word}
-                  </motion.span>
-                </span>
-              ))}
-            </h1>
-            <Reveal delay={0.3}>
-              <p className="hero-description">{profile.description}</p>
-              <div className="hero-actions">
-                <a className="primary-button" href="#contacts">Связаться <ArrowUpRight size={18} /></a>
-                <a className="text-button" href="#projects">Смотреть проекты</a>
-              </div>
-            </Reveal>
+          <div className="hero-layout">
+            <div className="hero-content">
+              <p className="eyebrow"><span aria-hidden="true">✦</span> {profile.role}</p>
+              <h1>
+                {words.map((word, index) => (
+                  <span className="hero-word-wrap" key={word}>
+                    <motion.span
+                      className="hero-word"
+                      initial={reduceMotion ? false : { y: "115%" }}
+                      animate={reduceMotion ? undefined : { y: 0 }}
+                      transition={{ duration: 0.85, delay: 0.14 + index * 0.12, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      {word}
+                    </motion.span>
+                  </span>
+                ))}
+              </h1>
+              <Reveal delay={0.3}>
+                <p className="hero-description">{profile.description}</p>
+                <div className="hero-actions">
+                  <a className="primary-button" href="#contacts">Связаться <ArrowUpRight size={18} /></a>
+                  <a className="text-button" href="#projects">Смотреть проекты <span>↘</span></a>
+                </div>
+              </Reveal>
+            </div>
+            <motion.aside
+              className="hero-stamp"
+              aria-label="Открыт к новым проектам"
+              initial={reduceMotion ? false : { opacity: 0, rotate: -18, scale: 0.8 }}
+              animate={reduceMotion ? undefined : { opacity: 1, rotate: -8, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <span>Открыт к проектам</span>
+              <strong>2026</strong>
+            </motion.aside>
           </div>
+          <div className="hero-coordinate" aria-hidden="true">55.7558° N / 37.6173° E</div>
           <a className="scroll-indicator" href="#certificates" aria-label="К сертификатам">
             <span>Листать</span><ArrowDown size={18} />
           </a>
         </section>
 
+        <div className="running-line" aria-hidden="true">
+          <div>
+            <span>Дизайн</span><i>+</i><span>Код</span><i>+</i><span>Логика</span><i>+</i><span>Запуск</span><i>+</i>
+            <span>Дизайн</span><i>+</i><span>Код</span><i>+</i><span>Логика</span><i>+</i><span>Запуск</span><i>+</i>
+          </div>
+        </div>
+
         <section id="certificates" className="content-section section-phase">
           <Reveal className="section-heading">
             <p className="section-number">01</p>
             <h2>Сертификаты</h2>
-            <p>Подтверждения обучения и профессионального развития. Реальные документы легко заменить в одном файле.</p>
+            <p><span className="editorial-mark">↳</span> Подтверждения обучения и профессионального развития. Скоро здесь появятся реальные документы.</p>
           </Reveal>
           <Certificates />
         </section>
@@ -251,11 +261,12 @@ export function Portfolio() {
           <Reveal className="section-heading">
             <p className="section-number">02</p>
             <h2>Стек</h2>
-            <p>{profile.about}</p>
+            <p><span className="editorial-mark">↳</span> {profile.about}</p>
           </Reveal>
           <div className="stack-grid">
             {stack.map((group, groupIndex) => (
               <Reveal key={group.group} className="stack-group" delay={groupIndex * 0.08}>
+                <span className="stack-group-index">0{groupIndex + 1}</span>
                 <h3>{group.group}</h3>
                 <div className="tech-list">
                   {group.items.map((item) => (
@@ -274,7 +285,7 @@ export function Portfolio() {
           <Reveal className="section-heading">
             <p className="section-number">03</p>
             <h2>Проекты</h2>
-            <p>Выбранные работы — от визуальных сайтов до offline-first приложений и внутренних систем.</p>
+            <p><span className="editorial-mark">↳</span> Выбранные работы — от визуальных сайтов до offline-first приложений и внутренних систем.</p>
           </Reveal>
           <div className="project-list">
             {projects.map((project, index) => (
@@ -282,6 +293,7 @@ export function Portfolio() {
                 <article className="project-card">
                   <div className="project-index">0{index + 1}</div>
                   <div className="project-copy">
+                    <span className="project-type">Selected case / {project.tags[0]}</span>
                     <h3>{project.title}</h3>
                     <p>{project.description}</p>
                     <ul>
@@ -312,6 +324,7 @@ export function Portfolio() {
           <Reveal>
             <p className="section-number">04</p>
             <h2>Готов обсудить<br />ваш проект</h2>
+            <div className="availability-note"><span></span> Сейчас доступен для новых задач</div>
           </Reveal>
           <div className="contact-list">
             {contacts.map((contact, index) => (
@@ -328,7 +341,7 @@ export function Portfolio() {
       </main>
       <footer>
         <span>© {new Date().getFullYear()} {profile.name}</span>
-        <span>Сделано на Next.js</span>
+        <span>Спроектировано и собрано вручную</span>
       </footer>
     </>
   );

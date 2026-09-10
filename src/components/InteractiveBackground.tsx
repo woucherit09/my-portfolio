@@ -38,20 +38,25 @@ const fragmentShader = `
     );
     vec2 c = mix(vec2(0.5, 0.5), uPointer, 0.24 * (1.0 - uMobile));
 
-    float field = blob(uv, a, 0.58) * 0.85;
-    field += blob(uv, b, 0.52) * 0.72;
-    field += blob(uv, c, 0.38) * 0.34;
-    field += sin((uv.x + uv.y + t) * 8.0 + p) * 0.018;
+    float fieldA = blob(uv, a, 0.62);
+    float fieldB = blob(uv, b, 0.56);
+    float pointerField = blob(uv, c, 0.34) * (1.0 - uMobile);
 
-    vec3 base = vec3(0.023, 0.025, 0.045);
-    vec3 blue = vec3(0.12, 0.27, 0.78);
-    vec3 cyan = vec3(0.08, 0.52, 0.68);
-    vec3 violet = vec3(0.34, 0.18, 0.62);
+    vec3 paper = vec3(0.953, 0.941, 0.902);
+    vec3 cobalt = vec3(0.075, 0.235, 0.86);
+    vec3 coral = vec3(0.98, 0.31, 0.19);
+    vec3 acid = vec3(0.72, 0.88, 0.22);
 
     float sectionMix = 0.5 + 0.5 * sin(p * 1.35);
-    vec3 accent = mix(blue, mix(cyan, violet, sectionMix), smoothstep(0.15, 0.95, uv.y));
-    vec3 color = base + accent * field * 0.38;
-    color += vec3(0.03, 0.05, 0.11) * smoothstep(0.9, 0.1, distance(uv, vec2(0.5)));
+    vec3 phaseColor = mix(cobalt, mix(coral, acid, sectionMix), smoothstep(0.12, 0.94, uv.y));
+    vec3 color = paper;
+    color = mix(color, cobalt, fieldA * 0.105);
+    color = mix(color, phaseColor, fieldB * 0.08);
+    color = mix(color, coral, pointerField * 0.08);
+
+    vec2 grid = abs(fract(uv * vec2(18.0, 12.0)) - 0.5);
+    float gridLine = 1.0 - smoothstep(0.485, 0.5, max(grid.x, grid.y));
+    color = mix(color, vec3(0.12, 0.14, 0.2), gridLine * 0.018);
 
     gl_FragColor = vec4(color, 1.0);
   }
