@@ -256,10 +256,10 @@ footer {
 .hero-content::before {
   content: "";
   position: absolute;
-  inset: -2rem -4rem;
+  inset: -3rem -5.5rem;
   z-index: -1;
   pointer-events: none;
-  background: radial-gradient(ellipse at 40% 48%, rgba(244, 239, 230, .55) 0%, rgba(244, 239, 230, .18) 52%, transparent 78%);
+  background: radial-gradient(ellipse at 42% 50%, rgba(244, 239, 230, .82) 0%, rgba(244, 239, 230, .45) 55%, transparent 80%);
 }
 
 .eyebrow,
@@ -593,53 +593,6 @@ footer {
 .editorial-mark {
   color: var(--coral);
   font-size: 1.3rem;
-}
-
-.value-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
-  margin-bottom: clamp(2.5rem, 5vw, 4rem);
-}
-
-.value-card {
-  min-height: 180px;
-  padding: 1.35rem 1.25rem;
-  border: 1px solid var(--ink);
-  background: rgba(255, 250, 241, 0.88);
-}
-
-.value-card:nth-child(2) {
-  background: var(--acid);
-}
-
-.value-card:nth-child(3) {
-  background: var(--blue);
-  color: white;
-}
-
-.value-card span {
-  display: block;
-  margin-bottom: 1.4rem;
-  font-family: var(--font-space), sans-serif;
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  opacity: 0.55;
-}
-
-.value-card h3 {
-  margin: 0 0 0.7rem;
-  font-family: var(--font-space), sans-serif;
-  font-size: 1.35rem;
-  letter-spacing: -0.04em;
-}
-
-.value-card p {
-  margin: 0;
-  color: inherit;
-  font-size: 0.95rem;
-  opacity: 0.88;
 }
 
 .stack-grid {
@@ -1084,10 +1037,6 @@ footer {
   .stack-group:nth-child(n) {
     grid-column: span 6;
     margin-top: 0;
-  }
-
-  .value-grid {
-    grid-template-columns: 1fr;
   }
 
   .project-case:nth-child(even) article,

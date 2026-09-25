@@ -17,7 +17,7 @@ import {
   siVercel,
 } from "simple-icons/icons";
 import { useEffect, useState } from "react";
-import { contacts, navigation, profile, projects, stack, valuePoints } from "@/data/portfolio";
+import { contacts, navigation, profile, projects, stack } from "@/data/portfolio";
 
 const iconMap: Record<string, { title: string; path: string }> = {
   react: siReact,
@@ -214,15 +214,6 @@ export function Portfolio() {
             <h2>Стек</h2>
             <p><span className="editorial-mark">↳</span> {profile.about}</p>
           </Reveal>
-          <div className="value-grid">
-            {valuePoints.map((point, index) => (
-              <Reveal key={point.title} className="value-card" delay={index * 0.08}>
-                <span>0{index + 1}</span>
-                <h3>{point.title}</h3>
-                <p>{point.text}</p>
-              </Reveal>
-            ))}
-          </div>
           <div className="stack-grid">
             {stack.map((group, groupIndex) => (
               <Reveal key={group.group} className="stack-group" delay={groupIndex * 0.08}>
