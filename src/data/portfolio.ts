@@ -97,17 +97,17 @@ export const projects = [
     github: null,
   },
   {
-    title: "Пятый этаж",
-    summary: "Сайт кофейни с бронированием",
+    title: "Happy Look",
+    summary: "Сайт салона красоты под Парижем",
     description:
-      "Атмосферный сайт кофейни с меню, адаптивным интерфейсом и сценарием бронирования столика.",
-    tags: ["HTML", "CSS", "JavaScript", "Responsive"],
+      "Многостраничный сайт института красоты: услуги, отзывы, бутик косметики и контакты — с акцентом на атмосферу и запись клиентов.",
+    tags: ["WordPress", "WooCommerce", "HTML/CSS", "Responsive"],
     results: [
-      { value: "+25%", label: "бронирований через сайт" },
-      { value: "Mobile", label: "удобный сценарий с телефона" },
-      { value: "Меню", label: "всегда актуально и под рукой" },
+      { value: "1 витрина", label: "услуги, отзывы и бутик в одном месте" },
+      { value: "Mobile", label: "удобный просмотр с телефона" },
+      { value: "EU", label: "сайт для клиентов во Франции" },
     ],
-    demo: "https://pyatii-etazh.vercel.app",
+    demo: "https://www.beautyhappylook.eu/главная/",
     github: null,
   },
 ];
