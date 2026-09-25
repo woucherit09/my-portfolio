@@ -1,7 +1,6 @@
 "use client";
 
-import Image from "next/image";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ArrowDown, ArrowUpRight, Code2, ExternalLink, Menu, X } from "lucide-react";
 import {
   siAnthropic,
@@ -17,8 +16,8 @@ import {
   siTypescript,
   siVercel,
 } from "simple-icons/icons";
-import { useEffect, useRef, useState } from "react";
-import { certificates, contacts, navigation, profile, projects, stack } from "@/data/portfolio";
+import { useEffect, useState } from "react";
+import { contacts, navigation, profile, projects, stack } from "@/data/portfolio";
 
 const iconMap: Record<string, { title: string; path: string }> = {
   react: siReact,
@@ -34,6 +33,8 @@ const iconMap: Record<string, { title: string; path: string }> = {
   docker: siDocker,
   vercel: siVercel,
 };
+
+const tickerItems = ["Дизайн", "Код", "Логика", "Запуск"];
 
 function Reveal({
   children,
@@ -120,75 +121,30 @@ function Navigation() {
   );
 }
 
-function Certificates() {
-  const [selected, setSelected] = useState<number | null>(null);
-  const closeButton = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    if (selected === null) return;
-    closeButton.current?.focus();
-    const onKeyDown = (event: KeyboardEvent) => event.key === "Escape" && setSelected(null);
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [selected]);
+function RunningLine() {
+  const sequence = Array.from({ length: 8 }, () => tickerItems).flat();
 
   return (
-    <>
-      <div className="certificate-grid">
-        {certificates.map((certificate, index) => (
-          <Reveal key={`${certificate.title}-${index}`} delay={index * 0.09}>
-            <button className="certificate-card" onClick={() => setSelected(index)}>
-              <span className="certificate-index" aria-hidden="true">0{index + 1}</span>
-              <span className="certificate-image">
-                <Image
-                  src={certificate.image}
-                  alt={`Сертификат «${certificate.title}»`}
-                  fill
-                  sizes="(max-width: 720px) 100vw, 50vw"
-                />
-              </span>
-              <span className="certificate-meta">
-                <strong>{certificate.title}</strong>
-                <span>{certificate.issuer} · {certificate.year}</span>
-              </span>
-            </button>
-          </Reveal>
-        ))}
+    <div className="running-line" aria-hidden="true">
+      <div className="running-line-track">
+        <div className="running-line-group">
+          {sequence.map((item, index) => (
+            <span key={`a-${item}-${index}`}>
+              {item}
+              <i>+</i>
+            </span>
+          ))}
+        </div>
+        <div className="running-line-group" aria-hidden="true">
+          {sequence.map((item, index) => (
+            <span key={`b-${item}-${index}`}>
+              {item}
+              <i>+</i>
+            </span>
+          ))}
+        </div>
       </div>
-      <AnimatePresence>
-        {selected !== null && (
-          <motion.div
-            className="lightbox"
-            role="dialog"
-            aria-modal="true"
-            aria-label={certificates[selected].title}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSelected(null)}
-          >
-            <motion.div
-              className="lightbox-content"
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.98 }}
-              onClick={(event) => event.stopPropagation()}
-            >
-              <button ref={closeButton} className="lightbox-close" onClick={() => setSelected(null)} aria-label="Закрыть">
-                <X />
-              </button>
-              <Image
-                src={certificates[selected].image}
-                alt={`Сертификат «${certificates[selected].title}»`}
-                width={1200}
-                height={800}
-                priority
-              />
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+    </div>
   );
 }
 
@@ -240,30 +196,16 @@ export function Portfolio() {
               </Reveal>
             </div>
           </div>
-          <a className="scroll-indicator" href="#certificates" aria-label="К сертификатам">
+          <a className="scroll-indicator" href="#stack" aria-label="К стеку">
             <span>Листать</span><ArrowDown size={18} />
           </a>
         </section>
 
-        <div className="running-line" aria-hidden="true">
-          <div>
-            <span>Дизайн</span><i>+</i><span>Код</span><i>+</i><span>Логика</span><i>+</i><span>Запуск</span><i>+</i>
-            <span>Дизайн</span><i>+</i><span>Код</span><i>+</i><span>Логика</span><i>+</i><span>Запуск</span><i>+</i>
-          </div>
-        </div>
-
-        <section id="certificates" className="content-section section-phase">
-          <Reveal className="section-heading">
-            <p className="section-number">01</p>
-            <h2>Сертификаты</h2>
-            <p><span className="editorial-mark">↳</span> Подтверждения обучения и профессионального развития. Скоро здесь появятся реальные документы.</p>
-          </Reveal>
-          <Certificates />
-        </section>
+        <RunningLine />
 
         <section id="stack" className="content-section section-phase">
           <Reveal className="section-heading">
-            <p className="section-number">02</p>
+            <p className="section-number">01</p>
             <h2>Стек</h2>
             <p><span className="editorial-mark">↳</span> {profile.about}</p>
           </Reveal>
@@ -287,7 +229,7 @@ export function Portfolio() {
 
         <section id="projects" className="content-section section-phase">
           <Reveal className="section-heading">
-            <p className="section-number">03</p>
+            <p className="section-number">02</p>
             <h2>Проекты</h2>
             <p><span className="editorial-mark">↳</span> Выбранные работы — от визуальных сайтов до offline-first приложений и внутренних систем.</p>
           </Reveal>
@@ -326,7 +268,7 @@ export function Portfolio() {
 
         <section id="contacts" className="contacts-section section-phase">
           <Reveal>
-            <p className="section-number">04</p>
+            <p className="section-number">03</p>
             <h2>Готов обсудить<br />ваш проект</h2>
             <div className="availability-note"><span></span> Сейчас доступен для новых задач</div>
           </Reveal>

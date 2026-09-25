@@ -475,28 +475,41 @@ footer {
 
 .running-line {
   position: relative;
+  left: 50%;
   z-index: 2;
-  width: 100%;
+  width: 100vw;
+  margin-left: -50vw;
   overflow: hidden;
   border-top: 1px solid var(--ink);
   border-bottom: 1px solid var(--ink);
   background: var(--blue);
   color: white;
-  transform: rotate(-1.2deg) scale(1.03);
 }
 
-.running-line div {
+.running-line-track {
+  display: flex;
   width: max-content;
+  align-items: center;
+  animation: ticker 28s linear infinite;
+}
+
+.running-line-group {
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  padding: 0.65rem 0;
+  padding: 0.7rem 1.5rem;
   font-family: var(--font-space), sans-serif;
   font-size: 0.82rem;
   font-weight: 800;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  animation: ticker 24s linear infinite;
+  white-space: nowrap;
+}
+
+.running-line-group span {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.5rem;
 }
 
 .running-line i {
@@ -506,6 +519,7 @@ footer {
 }
 
 @keyframes ticker {
+  from { transform: translateX(0); }
   to { transform: translateX(-50%); }
 }
 
@@ -554,144 +568,6 @@ footer {
 .editorial-mark {
   color: var(--coral);
   font-size: 1.3rem;
-}
-
-.certificate-grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 1.2rem;
-  padding-bottom: 3rem;
-}
-
-.certificate-grid > div {
-  grid-column: span 6;
-}
-
-.certificate-grid > div:nth-child(even) {
-  transform: translateY(3rem);
-}
-
-.certificate-card {
-  position: relative;
-  display: block;
-  width: 100%;
-  padding: 0;
-  border: 1px solid var(--ink);
-  border-radius: 0;
-  background: var(--paper-bright);
-  text-align: left;
-  cursor: zoom-in;
-  box-shadow: 8px 8px 0 rgba(23, 23, 24, 0.13);
-  transition: transform 0.35s cubic-bezier(.22,1,.36,1), box-shadow 0.35s ease;
-}
-
-.certificate-grid > div:nth-child(1) .certificate-card,
-.certificate-grid > div:nth-child(4) .certificate-card {
-  transform: rotate(-1deg);
-}
-
-.certificate-grid > div:nth-child(2) .certificate-card,
-.certificate-grid > div:nth-child(3) .certificate-card {
-  transform: rotate(1deg);
-}
-
-.certificate-card:hover {
-  transform: rotate(0) translateY(-8px) !important;
-  box-shadow: 13px 13px 0 var(--blue);
-}
-
-.certificate-index {
-  position: absolute;
-  top: -13px;
-  right: 16px;
-  z-index: 3;
-  padding: 0.2rem 0.5rem;
-  border: 1px solid var(--ink);
-  background: var(--acid);
-  font-family: var(--font-space), sans-serif;
-  font-size: 0.72rem;
-  font-weight: 800;
-}
-
-.certificate-image {
-  position: relative;
-  display: block;
-  aspect-ratio: 3 / 2;
-  overflow: hidden;
-  border-bottom: 1px solid var(--ink);
-  filter: saturate(.6) sepia(.06);
-}
-
-.certificate-image img {
-  object-fit: cover;
-  transition: transform 0.6s cubic-bezier(.22,1,.36,1), filter 0.4s ease;
-}
-
-.certificate-card:hover img {
-  transform: scale(1.035);
-  filter: saturate(1.2);
-}
-
-.certificate-meta {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1rem 1.1rem;
-}
-
-.certificate-meta strong {
-  font-family: var(--font-space), sans-serif;
-  font-size: 0.95rem;
-}
-
-.certificate-meta span {
-  align-self: center;
-  padding: .12rem .1rem;
-  border-bottom: 3px solid var(--acid);
-  color: var(--ink);
-  font-size: 0.82rem;
-  font-weight: 650;
-  white-space: nowrap;
-}
-
-.lightbox {
-  position: fixed;
-  inset: 0;
-  z-index: 50;
-  display: grid;
-  place-items: center;
-  padding: 1.5rem;
-  background: rgba(23, 23, 24, 0.88);
-  backdrop-filter: blur(8px);
-}
-
-.lightbox-content {
-  position: relative;
-  width: min(1100px, 96vw);
-}
-
-.lightbox-content img {
-  display: block;
-  width: 100%;
-  height: auto;
-  border: 1px solid white;
-}
-
-.lightbox-close {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  z-index: 2;
-  width: 44px;
-  height: 44px;
-  display: grid;
-  place-items: center;
-  padding: 0;
-  border: 1px solid white;
-  border-radius: 0;
-  background: var(--coral);
-  color: white;
-  cursor: pointer;
 }
 
 .stack-grid {
@@ -1178,27 +1054,6 @@ footer {
 
   .section-heading h2 {
     font-size: clamp(3rem, 16vw, 4.8rem);
-  }
-
-  .certificate-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.4rem;
-    padding-bottom: 0;
-  }
-
-  .certificate-grid > div {
-    grid-column: auto;
-    transform: none !important;
-  }
-
-  .certificate-grid > div .certificate-card {
-    transform: none !important;
-  }
-
-  .certificate-meta {
-    flex-direction: column;
-    gap: .2rem;
   }
 
   .stack-grid {

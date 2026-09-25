@@ -117,7 +117,7 @@ export function InteractiveBackground() {
     let targetPhase = 0;
     let currentPhase = 0;
     const targetPointer = new THREE.Vector2(0.5, 0.5);
-    const sectionIds = ["hero", "certificates", "stack", "projects", "contacts"];
+    const sectionIds = ["hero", "stack", "projects", "contacts"];
 
     const updatePhase = () => {
       const center = window.scrollY + window.innerHeight * 0.5;

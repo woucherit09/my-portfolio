@@ -9,17 +9,9 @@ export const profile = {
 
 export const navigation = [
   { label: "Главная", href: "#hero" },
-  { label: "Сертификаты", href: "#certificates" },
   { label: "Стек", href: "#stack" },
   { label: "Проекты", href: "#projects" },
   { label: "Контакты", href: "#contacts" },
-];
-
-export const certificates = [
-  { title: "Frontend Development", issuer: "Организация", year: "2026", image: "/certificates/placeholder.svg" },
-  { title: "Backend Engineering", issuer: "Организация", year: "2026", image: "/certificates/placeholder.svg" },
-  { title: "Python & Automation", issuer: "Организация", year: "2025", image: "/certificates/placeholder.svg" },
-  { title: "Databases", issuer: "Организация", year: "2025", image: "/certificates/placeholder.svg" },
 ];
 
 export const stack = [
