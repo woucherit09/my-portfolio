@@ -707,7 +707,10 @@ footer {
   color: inherit;
   text-decoration: none;
   overflow: hidden;
-  transition: transform 0.35s cubic-bezier(.22,1,.36,1), box-shadow 0.35s ease;
+  transition:
+    transform 0.35s cubic-bezier(.22,1,.36,1),
+    box-shadow 0.35s ease,
+    background-color 0.35s ease;
 }
 
 .project-case-card.is-linked {
@@ -732,9 +735,29 @@ footer {
   transform: translateX(clamp(0rem, 4vw, 3rem));
 }
 
+.project-case-card.is-linked:hover,
+.project-case-card:not(.is-linked):hover {
+  background: #f6e4d8;
+}
+
 .project-case-card.is-linked:hover {
   transform: translateY(-6px);
   box-shadow: 10px 10px 0 rgba(111, 66, 95, 0.18);
+}
+
+.case-2 .project-case-card.is-linked:hover,
+.case-2 .project-case-card:not(.is-linked):hover {
+  background: #ebe0e7;
+}
+
+.case-3 .project-case-card.is-linked:hover,
+.case-3 .project-case-card:not(.is-linked):hover {
+  background: #f3ebd4;
+}
+
+.case-4 .project-case-card.is-linked:hover,
+.case-4 .project-case-card:not(.is-linked):hover {
+  background: #e8e4e0;
 }
 
 .project-case:nth-child(even) .project-case-card.is-linked:hover {
