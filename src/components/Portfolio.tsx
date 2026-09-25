@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowDown, ArrowUpRight, Code2, ExternalLink, Menu, X } from "lucide-react";
+import { ArrowDown, ArrowUpRight, Menu, X } from "lucide-react";
 import {
   siAnthropic,
   siDocker,
@@ -239,45 +239,48 @@ export function Portfolio() {
             <p><span className="editorial-mark">↳</span> Не просто «сделал сайт» — работы, которые дают клиенту понятный эффект.</p>
           </Reveal>
           <div className="project-board">
-            {projects.map((project, index) => (
-              <Reveal key={project.title} delay={index * 0.08} className={`project-case case-${index + 1}`}>
-                <article>
-                  <header className="project-case-top">
-                    <div>
-                      <span className="project-type"><b>case_{String(index + 1).padStart(2, "0")}</b> / {project.tags[0]}</span>
-                      <h3>{project.title}</h3>
-                      <p className="project-summary">{project.summary}</p>
-                    </div>
-                    <div className="project-links">
-                      {project.demo ? (
-                        <a href={project.demo} target="_blank" rel="noreferrer">
-                          Демо <ExternalLink size={17} />
-                        </a>
-                      ) : (
-                        <span>Закрытый проект</span>
-                      )}
-                      {project.github && (
-                        <a href={project.github} target="_blank" rel="noreferrer">
-                          GitHub <Code2 size={17} />
-                        </a>
-                      )}
-                    </div>
-                  </header>
-                  <p className="project-description">{project.description}</p>
-                  <div className="project-results" aria-label={`Результаты проекта ${project.title}`}>
-                    {project.results.map((result) => (
-                      <div key={`${project.title}-${result.label}`} className="result-pill">
-                        <strong>{result.value}</strong>
-                        <span>{result.label}</span>
+            {projects.map((project, index) => {
+              const isLinked = Boolean(project.demo);
+              const CardTag = isLinked ? "a" : "article";
+              const cardProps = isLinked
+                ? {
+                    href: project.demo!,
+                    target: "_blank",
+                    rel: "noreferrer",
+                    "aria-label": `Открыть проект ${project.title}`,
+                  }
+                : {};
+
+              return (
+                <Reveal key={project.title} delay={index * 0.08} className={`project-case case-${index + 1}`}>
+                  <CardTag
+                    className={isLinked ? "project-case-card is-linked" : "project-case-card"}
+                    {...cardProps}
+                  >
+                    <header className="project-case-top">
+                      <div>
+                        <span className="project-type"><b>case_{String(index + 1).padStart(2, "0")}</b> / {project.tags[0]}</span>
+                        <h3>{project.title}</h3>
+                        <p className="project-summary">{project.summary}</p>
                       </div>
-                    ))}
-                  </div>
-                  <ul>
-                    {project.tags.map((tag) => <li key={tag}>{tag}</li>)}
-                  </ul>
-                </article>
-              </Reveal>
-            ))}
+                      {!isLinked && <span className="project-closed">Закрытый проект</span>}
+                    </header>
+                    <p className="project-description">{project.description}</p>
+                    <div className="project-results" aria-label={`Результаты проекта ${project.title}`}>
+                      {project.results.map((result) => (
+                        <div key={`${project.title}-${result.label}`} className="result-pill">
+                          <strong>{result.value}</strong>
+                          <span>{result.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <ul>
+                      {project.tags.map((tag) => <li key={tag}>{tag}</li>)}
+                    </ul>
+                  </CardTag>
+                </Reveal>
+              );
+            })}
           </div>
         </section>
 
