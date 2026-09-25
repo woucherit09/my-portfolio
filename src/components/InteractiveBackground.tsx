@@ -63,17 +63,24 @@ const fragmentShader = `
       flowLines += 1.0 - smoothstep(0.002, 0.0065, distanceToLine);
     }
 
-    float ribbonMask = smoothstep(1.25, 0.2, abs(p.x - 0.2));
-    ribbonMask *= smoothstep(0.48, 0.08, abs(p.y));
-    flowLines *= ribbonMask;
+    float ribbonMask = smoothstep(1.45, 0.05, abs(p.x - 0.15));
+    ribbonMask *= smoothstep(0.62, 0.02, abs(p.y));
+    // On the hero (phase near 0) the field is stronger and wider.
+    float heroBoost = 1.0 + (1.0 - smoothstep(0.0, 1.15, phase)) * 1.35;
+    flowLines *= ribbonMask * heroBoost;
 
     float scanPosition = fract(t * 0.055 + phase * 0.13);
     float scanBand = smoothstep(0.17, 0.0, abs(uv.y - scanPosition));
     float sectionMix = 0.5 + 0.5 * sin(phase * 1.35);
     vec3 phaseColor = mix(plum, terracotta, sectionMix);
     vec3 color = paper;
-    color = mix(color, phaseColor, flowLines * (0.14 + scanBand * 0.16));
-    color = mix(color, gold, scanBand * flowLines * 0.05);
+    float lineStrength = mix(0.34, 0.16, smoothstep(0.0, 1.4, phase));
+    color = mix(color, phaseColor, flowLines * (lineStrength + scanBand * 0.22));
+    color = mix(color, gold, scanBand * flowLines * mix(0.14, 0.05, smoothstep(0.0, 1.2, phase)));
+
+    // Soft color wash behind the hero so the motion reads even between lines.
+    float wash = (1.0 - smoothstep(0.0, 1.1, phase)) * (0.08 + 0.06 * grain);
+    color = mix(color, mix(plum, terracotta, 0.45), wash * smoothstep(1.1, 0.15, length(p)));
 
     float hairline = 1.0 - smoothstep(0.0, 0.0015, abs(fract(uv.y * 16.0) - 0.5));
     color = mix(color, vec3(0.1), hairline * 0.018);

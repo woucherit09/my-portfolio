@@ -17,7 +17,7 @@ import {
   siVercel,
 } from "simple-icons/icons";
 import { useEffect, useState } from "react";
-import { contacts, navigation, profile, projects, stack } from "@/data/portfolio";
+import { contacts, navigation, profile, projects, stack, valuePoints } from "@/data/portfolio";
 
 const iconMap: Record<string, { title: string; path: string }> = {
   react: siReact,
@@ -34,7 +34,7 @@ const iconMap: Record<string, { title: string; path: string }> = {
   vercel: siVercel,
 };
 
-const tickerItems = ["Дизайн", "Код", "Логика", "Запуск"];
+const tickerItems = ["Решение", "План", "Код", "Запуск", "Результат"];
 
 function Reveal({
   children,
@@ -189,9 +189,14 @@ export function Portfolio() {
                   <small>Frontend / Backend / AI</small>
                 </div>
                 <p className="hero-description">{profile.description}</p>
+                <ul className="hero-promises">
+                  <li>Найду решение вашей проблемы</li>
+                  <li>Предложу то, что нужно именно вам</li>
+                  <li>Доведу до рабочего результата</li>
+                </ul>
                 <div className="hero-actions">
-                  <a className="primary-button" href="#contacts">Связаться <ArrowUpRight size={18} /></a>
-                  <a className="text-button" href="#projects">Смотреть проекты <span>↘</span></a>
+                  <a className="primary-button" href="#contacts">Обсудить задачу <ArrowUpRight size={18} /></a>
+                  <a className="text-button" href="#projects">Смотреть результаты <span>↘</span></a>
                 </div>
               </Reveal>
             </div>
@@ -209,6 +214,15 @@ export function Portfolio() {
             <h2>Стек</h2>
             <p><span className="editorial-mark">↳</span> {profile.about}</p>
           </Reveal>
+          <div className="value-grid">
+            {valuePoints.map((point, index) => (
+              <Reveal key={point.title} className="value-card" delay={index * 0.08}>
+                <span>0{index + 1}</span>
+                <h3>{point.title}</h3>
+                <p>{point.text}</p>
+              </Reveal>
+            ))}
+          </div>
           <div className="stack-grid">
             {stack.map((group, groupIndex) => (
               <Reveal key={group.group} className="stack-group" delay={groupIndex * 0.08}>
@@ -231,35 +245,45 @@ export function Portfolio() {
           <Reveal className="section-heading">
             <p className="section-number">02</p>
             <h2>Проекты</h2>
-            <p><span className="editorial-mark">↳</span> Выбранные работы — от визуальных сайтов до offline-first приложений и внутренних систем.</p>
+            <p><span className="editorial-mark">↳</span> Не просто «сделал сайт» — работы, которые дают клиенту понятный эффект.</p>
           </Reveal>
-          <div className="project-list">
+          <div className="project-board">
             {projects.map((project, index) => (
-              <Reveal key={project.title} delay={index * 0.08}>
-                <article className="project-card">
-                  <div className="project-index">0{index + 1}</div>
-                  <div className="project-copy">
-                    <span className="project-type"><b>case_{String(index + 1).padStart(2, "0")}</b> / {project.tags[0]}</span>
-                    <h3>{project.title}</h3>
-                    <p>{project.description}</p>
-                    <ul>
-                      {project.tags.map((tag) => <li key={tag}>{tag}</li>)}
-                    </ul>
+              <Reveal key={project.title} delay={index * 0.08} className={`project-case case-${index + 1}`}>
+                <article>
+                  <header className="project-case-top">
+                    <div>
+                      <span className="project-type"><b>case_{String(index + 1).padStart(2, "0")}</b> / {project.tags[0]}</span>
+                      <h3>{project.title}</h3>
+                      <p className="project-summary">{project.summary}</p>
+                    </div>
+                    <div className="project-links">
+                      {project.demo ? (
+                        <a href={project.demo} target="_blank" rel="noreferrer">
+                          Демо <ExternalLink size={17} />
+                        </a>
+                      ) : (
+                        <span>Закрытый проект</span>
+                      )}
+                      {project.github && (
+                        <a href={project.github} target="_blank" rel="noreferrer">
+                          GitHub <Code2 size={17} />
+                        </a>
+                      )}
+                    </div>
+                  </header>
+                  <p className="project-description">{project.description}</p>
+                  <div className="project-results" aria-label={`Результаты проекта ${project.title}`}>
+                    {project.results.map((result) => (
+                      <div key={`${project.title}-${result.label}`} className="result-pill">
+                        <strong>{result.value}</strong>
+                        <span>{result.label}</span>
+                      </div>
+                    ))}
                   </div>
-                  <div className="project-links">
-                    {project.demo ? (
-                      <a href={project.demo} target="_blank" rel="noreferrer">
-                        Демо <ExternalLink size={17} />
-                      </a>
-                    ) : (
-                      <span>Закрытый проект</span>
-                    )}
-                    {project.github && (
-                      <a href={project.github} target="_blank" rel="noreferrer">
-                        GitHub <Code2 size={17} />
-                      </a>
-                    )}
-                  </div>
+                  <ul>
+                    {project.tags.map((tag) => <li key={tag}>{tag}</li>)}
+                  </ul>
                 </article>
               </Reveal>
             ))}
@@ -269,7 +293,8 @@ export function Portfolio() {
         <section id="contacts" className="contacts-section section-phase">
           <Reveal>
             <p className="section-number">03</p>
-            <h2>Готов обсудить<br />ваш проект</h2>
+            <h2>Расскажите задачу —<br />предложу решение</h2>
+            <p className="contact-lead">{profile.promise}</p>
             <div className="availability-note"><span></span> Сейчас доступен для новых задач</div>
           </Reveal>
           <div className="contact-list">
